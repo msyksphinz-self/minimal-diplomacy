@@ -1,0 +1,45 @@
+long_name = $(PROJECT).$(CONFIG)
+long_name_fir = $(long_name).fir
+
+VERILATOR := verilator --cc --exe
+VERILATOR_THREADS ?= 4
+
+CXX ?= g++
+# CXXSRCS := emulator SimDTM SimJTAG remote_bitbang
+CXXSRCS := main
+CXXFLAGS := $(CXXFLAGS) -std=c++11 -I$(RISCV)/include
+LDFLAGS := $(LDFLAGS) -L$(RISCV)/lib -Wl,-rpath,$(RISCV)/lib -L$(abspath $(sim_dir)) -lfesvr -lpthread
+JVM_MEMORY ?= 2G
+
+resources := ./src/main/resources
+csrc := $(abspath verilator_csrc)
+vsrc := $(resources)/vsrc
+sim_dir = .
+model_header_debug = $(generated_dir_debug)/$(long_name)/V$(MODEL).h
+
+verilog = $(abspath TestHarness.v)
+MODEL ?= TestHarness
+
+generated_dir_debug = $(abspath ./generated-src-debug)
+
+VERILATOR_FLAGS := --top-module $(MODEL) \
+  +define+PRINTF_COND=1 \
+  +define+RANDOMIZE_GARBAGE_ASSIGN \
+  +define+STOP_COND=\$$c\(\"done_reset\"\) --assert \
+  --trace-fst \
+  --bbox-sys \
+  --trace-underscore \
+  --output-split 20000 \
+  --output-split-cfuncs 20000 \
+  --threads $(VERILATOR_THREADS) -Wno-UNOPTTHREADS \
+  -Wno-STMTDLY --x-assign unique \
+  -I$(vsrc) \
+  -O3 -CFLAGS "$(CXXFLAGS) -DVERILATOR -DTEST_HARNESS=V$(MODEL) -include $(csrc)/verilator.h"
+
+# -include $(generated_dir_debug)/../$(PROJECT).$(CONFIG).plusArgs"
+
+cppfiles = $(addprefix $(csrc)/, $(addsuffix .cpp, $(CXXSRCS)))
+headers = $(wildcard $(csrc)/*.h)
+
+verilator_bin:
+	make -C rocketchip/emulator/ verilator
