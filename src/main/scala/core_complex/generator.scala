@@ -4,11 +4,11 @@ package core_complex
 
 import chisel3._
 import freechips.rocketchip.config.Parameters
-import chisel3.stage.ChiselStage;
+import chisel3.Driver;
 
 object Generator {
     final def main(args: Array[String]) {
-        val verilog = ChiselStage.emitSystemVerilog(
+        val verilog = Driver.emitVerilog(
             new TestHarness()(Parameters.empty)
         )
     }
