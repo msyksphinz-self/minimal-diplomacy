@@ -1,0 +1,6 @@
+target/
+.idea
+TestHarness.*
+firrtl_black_box_resource_files.f
+generated-src-debug/
+project/
