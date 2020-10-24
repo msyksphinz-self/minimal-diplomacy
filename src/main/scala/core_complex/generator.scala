@@ -8,8 +8,9 @@ import chisel3.Driver;
 
 object Generator {
     final def main(args: Array[String]) {
+        val p = (new Default2Config).toInstance
         val verilog = Driver.emitVerilog(
-            new TestHarness()(Parameters.empty)
+            new TestHarness()(p)
         )
     }
 }

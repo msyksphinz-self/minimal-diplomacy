@@ -11,7 +11,7 @@ class TestHarness()(implicit p: Parameters) extends Module {
     val success = Output(Bool())
   })
 
-  val ldut = LazyModule(new core_complex(4, 5000))
+  val ldut = LazyModule(new core_complex(5000))
   val dut = Module(ldut.module)
 
   io.success := dut.io.finished
