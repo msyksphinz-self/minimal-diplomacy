@@ -33,8 +33,8 @@ class core_complex(implicit p: Parameters) extends LazyModule {
     val io = IO(new Bundle {
       val finished = Output(Bool())
     })
-    // pusher1.module.io.run := true.B
+    pusher1.module.io.run := true.B
     // pusher2.module.io.run := true.B
-    // io.finished := pusher1.module.io.done
+    io.finished := pusher1.module.io.done
   }
 }
