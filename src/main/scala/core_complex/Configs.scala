@@ -18,6 +18,7 @@ class Bus64BitConfig extends Config((site, here, up) => {
 
 class Bus32BitConfig extends Config((site, here, up) => {
   case BusWidthBytes => 32 / 8
+  case AddrSize => 0x300 * here(BusWidthBytes)
 })
 
 class IfuConnectConfig extends Config((site, here, up) => {
