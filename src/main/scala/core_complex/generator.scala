@@ -12,10 +12,10 @@ import freechips.rocketchip.util.ElaborationArtefacts;
 
 object Generator {
     final def main(args: Array[String]) {
-        val p = (new Default2Config).toInstance
-        // val p = (new Default1Config).toInstance
+        // val p = (new Default2Config).toInstance
+        val p = (new Default1Config).toInstance
         Driver.emitVerilog(
-            new TestHarness()(p)
+            new CoreComplexTestHarness()(p)
         )
         ElaborationArtefacts.files.foreach { case (extension, contents) =>
             val f = new File(".", "TestHarness." + extension)

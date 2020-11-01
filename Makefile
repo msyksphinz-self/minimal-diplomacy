@@ -22,7 +22,7 @@ export JAVA_ARGS
 
 include Makefrag-verilator
 
-tilelink: TestHarness.sv
+core_complex: CoreComplexTestHarness.sv
 	mkdir -p $(generated_dir_debug)/$(long_name)
 	$(VERILATOR) $(VERILATOR_FLAGS) -Mdir $(generated_dir_debug)/$(long_name) \
 	-o $(abspath $(sim_dir))/$@ $(verilog) $(cppfiles) -LDFLAGS "$(LDFLAGS)" \
@@ -30,16 +30,8 @@ tilelink: TestHarness.sv
 	$(MAKE) VM_PARALLEL_BUILDS=1 -C $(generated_dir_debug)/$(long_name) -f V$(MODEL).mk
 	./$@
 
-tilelink-xml: TestHarness.sv
-	mkdir -p $(generated_dir_debug)/$(long_name)
-	$(VERILATOR) $(VERILATOR_FLAGS) --xml-only -Mdir $(generated_dir_debug)/$(long_name) \
-	-o $(abspath $(sim_dir))/$@ $(verilog) $(cppfiles) -LDFLAGS "$(LDFLAGS)" \
-	-CFLAGS "-I$(generated_dir_debug) -include $(generated_dir_debug)"
-
-TestHarness.sv:
-	$(SBT) 'runMain $(PROJECT).Generator $(generated_dir_debug) core_complex TestHarness $(PROJECT)'
-
-#	$(SBT) 'runMain $(PROJECT).Generator $(generated_dir_debug) core_complex TestHarness $(PROJECT) $(CONFIG)'
+CoreComplexTestHarness.sv:
+	$(SBT) 'runMain $(PROJECT).Generator $(generated_dir_debug) core_complex CoreComplexTestHarness $(PROJECT)'
 
 mkdir_generated_dir:
 	mkdir -p $(generated_dir) $(generated_dir_debug)

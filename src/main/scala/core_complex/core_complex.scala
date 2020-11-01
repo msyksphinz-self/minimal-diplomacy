@@ -15,7 +15,7 @@ class core_complex(implicit p: Parameters) extends LazyModule {
   val xbar   = LazyModule(new TLXbar)
   val memory = LazyModule(new TLRAM(AddressSet(0x0, p(AddrSize)-1), beatBytes = p(BusWidthBytes)))
 
-  val pusher1 = LazyModule(new TLPatternPusher("pat" + i.toString(), Seq(
+  val pusher1 = LazyModule(new TLPatternPusher("pat1", Seq(
     new WritePattern(0x100, 0x2, 0x012345678L),
     new WritePattern(0x500, 0x2, 0x0abcdef01L),
     new ReadExpectPattern(0x100, 0x2, 0x012345678L),
@@ -23,10 +23,19 @@ class core_complex(implicit p: Parameters) extends LazyModule {
   )))
   xbar.node := pusher1.node
 
+  // val pusher2 = LazyModule(new TLPatternPusher("pat2", Seq(
+  //   new WritePattern(0x100, 0x2, 0x012345678L),
+  //   new WritePattern(0x500, 0x2, 0x0abcdef01L),
+  //   new ReadExpectPattern(0x100, 0x2, 0x012345678L),
+  //   new ReadExpectPattern(0x500, 0x2, 0x0abcdef01L)
+  // )))
+  // xbar.node := pusher2.node
+
   if (p(ConnectIfu)) {
     val ifu    = LazyModule(new ifu("ifu"))
     xbar.node := ifu.node
   }
+
   memory.node := xbar.node
 
   lazy val module = new LazyModuleImp(this) {
