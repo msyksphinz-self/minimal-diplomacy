@@ -10,14 +10,20 @@ import chisel3._
 import chisel3.internal.sourceinfo.SourceInfo
 import chisel3.stage.ChiselStage
 import chisel3.util.random.FibonacciLFSR
-import freechips.rocketchip.diplomacy.{SimpleNodeImp, RenderedEdge, ValName, SourceNode,
-  NexusNode, SinkNode, LazyModule, LazyModuleImp}
+import freechips.rocketchip.diplomacy.{LazyModule, LazyModuleImp, NexusNode, RenderedEdge, SimpleNodeImp, SinkNode, SourceNode, ValName}
 
 object Generator {
   final def main(args: Array[String]) {
+    implicit val valName = ValName("testHarness")
     Driver.emitVerilog(
-      LazyModule(new AdderTestHarness()(Parameters.empty)).module
+      new TestHarness()(Parameters.empty)
     )
+    ElaborationArtefacts.files.foreach { case (extension, contents) =>
+      val f = new File(".", "TestHarness." + extension)
+      val fw = new FileWriter(f)
+      fw.write(contents())
+      fw.close
+    }
     /*
     val verilog = (new ChiselStage).emitVerilog(
       new AdderTestHarness()(Parameters.empty)

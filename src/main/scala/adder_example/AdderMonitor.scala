@@ -23,7 +23,7 @@ class AdderMonitor(width: Int, numOperands: Int)(implicit p: Parameters) extends
     })
 
     // print operation
-    printf(nodeSeq.map(node => p"${node.in.head._1}").reduce(_ + p" + " + _) + p" = ${nodeSum.in.head._1}")
+    printf(nodeSeq.map(node => p"${node.in.head._1}").reduce(_ + p" + " + _) + p" = ${nodeSum.in.head._1}\n")
 
     // basic correctness checking
     io.error := nodeSum.in.head._1 =/= nodeSeq.map(_.in.head._1).reduce(_ + _)
