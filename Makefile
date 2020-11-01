@@ -33,6 +33,18 @@ core_complex: CoreComplexTestHarness.sv
 CoreComplexTestHarness.sv:
 	$(SBT) 'runMain $(PROJECT).Generator $(generated_dir_debug) core_complex CoreComplexTestHarness $(PROJECT)'
 
+adder_example: AdderExampleTestHarness.sv
+	mkdir -p $(generated_dir_debug)/$(long_name)
+	$(VERILATOR) $(VERILATOR_FLAGS) -Mdir $(generated_dir_debug)/$(long_name) \
+	-o $(abspath $(sim_dir))/$@ $(verilog) $(cppfiles) -LDFLAGS "$(LDFLAGS)" \
+	-CFLAGS "-I$(generated_dir_debug)"
+	$(MAKE) VM_PARALLEL_BUILDS=1 -C $(generated_dir_debug)/$(long_name) -f V$(MODEL).mk
+	./$@
+
+AdderExampleTestHarness.sv:
+	$(SBT) 'runMain $(PROJECT).Generator $(generated_dir_debug) AdderExample AdderExampleTestHarness $(PROJECT)'
+
+
 mkdir_generated_dir:
 	mkdir -p $(generated_dir) $(generated_dir_debug)
 
