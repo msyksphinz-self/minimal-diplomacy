@@ -42,7 +42,7 @@ adder_example: AdderExampleTestHarness.sv
 	./$@
 
 AdderExampleTestHarness.sv:
-	$(SBT) 'runMain $(PROJECT).Generator $(generated_dir_debug) AdderExample AdderExampleTestHarness $(PROJECT)'
+	$(SBT) 'runMain adder_example.Generator $(generated_dir_debug) AdderExample AdderTestHarness adder_example'
 
 
 mkdir_generated_dir:
