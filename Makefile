@@ -44,6 +44,17 @@ adder_example: AdderExampleTestHarness.sv
 AdderExampleTestHarness.sv:
 	$(SBT) 'runMain adder_example.Generator $(generated_dir_debug) AdderExample AdderTestHarness adder_example'
 
+adder_config: AdderConfig
+	mkdir -p $(generated_dir_debug)/$(long_name)
+	$(VERILATOR) $(VERILATOR_FLAGS) -Mdir $(generated_dir_debug)/$(long_name) \
+	-o $(abspath $(sim_dir))/$@ $(verilog) $(cppfiles) -LDFLAGS "$(LDFLAGS)" \
+	-CFLAGS "-I$(generated_dir_debug)"
+	$(MAKE) VM_PARALLEL_BUILDS=1 -C $(generated_dir_debug)/$(long_name) -f V$(MODEL).mk
+	./$@
+
+AdderConfig:
+	$(SBT) 'runMain adder_config.Generator $(generated_dir_debug) AdderConfig AdderTestHarness adder_config'
+
 
 mkdir_generated_dir:
 	mkdir -p $(generated_dir) $(generated_dir_debug)
